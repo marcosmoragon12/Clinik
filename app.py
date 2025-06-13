@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS avanzados para diseño visual profesional
+# Estilos CSS profesionales con layout mejorado
 st.markdown("""
 <style>
     html, body, .main, .block-container {
@@ -51,38 +51,40 @@ st.markdown("""
         font-size: 0.95rem;
         color: #343a40;
     }
-    .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    .modules-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 2rem;
-        max-width: 1000px;
-        margin: auto;
-        padding-bottom: 3rem;
+        max-width: 1100px;
+        margin: 0 auto 2rem;
     }
-    .menu-card {
+    .module-card {
+        flex: 1 1 300px;
+        max-width: 320px;
         background-color: #f8f9fa;
-        border: 1.5px solid #cfd8dc;
         border-radius: 16px;
-        padding: 1.8rem 1.5rem;
-        text-align: left;
-        transition: 0.3s ease;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        border: 1.5px solid #d3d3d3;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        transition: 0.3s ease-in-out;
+        text-align: center;
         text-decoration: none;
     }
-    .menu-card:hover {
-        background-color: #e9ecef;
-        transform: translateY(-4px);
+    .module-card:hover {
+        background-color: #edf1ee;
+        transform: translateY(-3px);
         cursor: pointer;
     }
-    .menu-card h3 {
+    .module-title {
         font-size: 1.2rem;
         color: #1b4332;
-        margin-bottom: 0.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
     }
-    .menu-card p {
+    .module-desc {
         font-size: 0.95rem;
         color: #495057;
-        margin: 0;
     }
     .footer-note {
         text-align: center;
@@ -93,7 +95,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Hero visual superior
+# Sección Hero
 st.markdown("""
 <div class='hero-section'>
     <div class='hero-title'>Clinik</div>
@@ -102,47 +104,38 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Mensaje destacado sobre misión
+# Caja de introducción destacada
 st.markdown("""
 <div class='highlight-box'>
-🔬 Clinik nace con la misión de hacer accesible la estadística avanzada y la psicometría a profesionales de la salud.<br>
-Nuestra plataforma ofrece herramientas de análisis potentes, interpretaciones comprensibles y un diseño pensado para el trabajo real.
+🔬 Clinik hace accesible la estadística avanzada y la psicometría a profesionales de la salud, con herramientas prácticas y visualmente comprensibles.
 </div>
 """, unsafe_allow_html=True)
 
-# Menú de módulos
+# Tarjetas de módulos en formato profesional
 modulos_ordenados = [
     ("📁 Exploración y Estadísticos Básicos", "0_Exploracion", "Revisión inicial de los datos con gráficos e indicadores clave"),
-    ("⚖️ Comparación de Grupos (t-test, ANOVA) (Próximamente)", None, "Pruebas para comparar variables entre grupos clínicos"),
+    ("⚖️ Comparación de Grupos (t-test, ANOVA)", None, "Pruebas para comparar variables entre grupos clínicos"),
     ("🧪 Análisis Factorial Exploratorio (AFE)", "1_AFE", "Identifica estructuras latentes en tus cuestionarios"),
-    ("📐 Análisis Factorial Confirmatorio (CFA) (Próximamente)", None, "Evalúa modelos teóricos con indicadores de ajuste"),
-    ("🤖 Modelos Predictivos y Machine Learning (Próximamente)", None, "Predice variables o clasifica pacientes con algoritmos avanzados"),
-    ("🧭 Segmentación y Clustering (Próximamente)", None, "Detecta perfiles o grupos clínicos similares")
+    ("📐 Análisis Factorial Confirmatorio (CFA)", None, "Evalúa modelos teóricos con indicadores de ajuste"),
+    ("🤖 Modelos Predictivos y Machine Learning", None, "Predice variables o clasifica pacientes con algoritmos avanzados"),
+    ("🧭 Segmentación y Clustering", None, "Detecta perfiles o grupos clínicos similares")
 ]
 
-st.markdown("<div class='menu-grid'>", unsafe_allow_html=True)
+st.markdown("<div class='modules-wrapper'>", unsafe_allow_html=True)
 for texto, ruta, descripcion in modulos_ordenados:
-    if ruta:
-        st.markdown(f"""
-        <div class='menu-card'>
-            <h3>{texto}</h3>
-            <p>{descripcion}</p>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown(f"""
-        <div class='menu-card'>
-            <h3>{texto}</h3>
-            <p>{descripcion}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class='module-card'>
+        <div class='module-title'>{texto}</div>
+        <div class='module-desc'>{descripcion}</div>
+    </div>
+    """, unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Pie de página informativo
 st.markdown("""
 <div class='footer-note'>
-📌 Usa el menú lateral izquierdo o las tarjetas para acceder a los módulos.<br>
-🔒 Clinik es una herramienta en evolución, ideal para investigación aplicada y entornos clínicos reales.
+📌 Usa el menú lateral izquierdo para acceder a los módulos.<br>
+🔒 Clinik evoluciona constantemente para convertirse en tu aliada profesional en investigación clínica y aplicada.
 </div>
 """, unsafe_allow_html=True)
