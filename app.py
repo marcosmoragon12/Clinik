@@ -1,5 +1,6 @@
 # app.py
 import streamlit as st
+import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Clinik",
@@ -8,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS profesionales con layout mejorado
+# Estilos CSS profesionales con botones interactivos y layout refinado
 st.markdown("""
 <style>
     html, body, .main, .block-container {
@@ -69,12 +70,6 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(0,0,0,0.03);
         transition: 0.3s ease-in-out;
         text-align: center;
-        text-decoration: none;
-    }
-    .module-card:hover {
-        background-color: #edf1ee;
-        transform: translateY(-3px);
-        cursor: pointer;
     }
     .module-title {
         font-size: 1.2rem;
@@ -85,6 +80,22 @@ st.markdown("""
     .module-desc {
         font-size: 0.95rem;
         color: #495057;
+        margin-bottom: 1rem;
+    }
+    .module-button {
+        background-color: #1b4332;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .module-button:hover {
+        background-color: #2d6a4f;
     }
     .footer-note {
         text-align: center;
@@ -111,22 +122,24 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Tarjetas de módulos en formato profesional
+# Tarjetas de módulos con botones
 modulos_ordenados = [
     ("📁 Exploración y Estadísticos Básicos", "0_Exploracion", "Revisión inicial de los datos con gráficos e indicadores clave"),
-    ("⚖️ Comparación de Grupos (t-test, ANOVA)", None, "Pruebas para comparar variables entre grupos clínicos"),
+    ("⚖️ Comparación de Grupos (t-test, ANOVA)", None, "Próximamente: Pruebas para comparar variables entre grupos clínicos"),
     ("🧪 Análisis Factorial Exploratorio (AFE)", "1_AFE", "Identifica estructuras latentes en tus cuestionarios"),
-    ("📐 Análisis Factorial Confirmatorio (CFA)", None, "Evalúa modelos teóricos con indicadores de ajuste"),
-    ("🤖 Modelos Predictivos y Machine Learning", None, "Predice variables o clasifica pacientes con algoritmos avanzados"),
-    ("🧭 Segmentación y Clustering", None, "Detecta perfiles o grupos clínicos similares")
+    ("📐 Análisis Factorial Confirmatorio (CFA)", None, "Próximamente: Evalúa modelos teóricos con indicadores de ajuste"),
+    ("🤖 Modelos Predictivos y Machine Learning", None, "Próximamente: Algoritmos para predicción clínica"),
+    ("🧭 Segmentación y Clustering", None, "Próximamente: Agrupa perfiles clínicos similares")
 ]
 
 st.markdown("<div class='modules-wrapper'>", unsafe_allow_html=True)
 for texto, ruta, descripcion in modulos_ordenados:
+    button = f"<a href='/{ruta}' class='module-button'>Acceder</a>" if ruta else f"<span class='module-button' style='background-color:#adb5bd; cursor: not-allowed;'>Próximamente</span>"
     st.markdown(f"""
     <div class='module-card'>
         <div class='module-title'>{texto}</div>
         <div class='module-desc'>{descripcion}</div>
+        {button}
     </div>
     """, unsafe_allow_html=True)
 
