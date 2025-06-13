@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS profesionales para diseño visual moderno
+# Estilos CSS avanzados para diseño visual profesional
 st.markdown("""
 <style>
     html, body, .main, .block-container {
@@ -41,6 +41,16 @@ st.markdown("""
         font-size: 1rem;
         color: #6c757d;
     }
+    .highlight-box {
+        background-color: #f1f3f5;
+        padding: 1.2rem 2rem;
+        border-left: 4px solid #1b4332;
+        border-radius: 8px;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        font-size: 0.95rem;
+        color: #343a40;
+    }
     .menu-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -57,6 +67,7 @@ st.markdown("""
         text-align: left;
         transition: 0.3s ease;
         box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        text-decoration: none;
     }
     .menu-card:hover {
         background-color: #e9ecef;
@@ -82,7 +93,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Hero section
+# Hero visual superior
 st.markdown("""
 <div class='hero-section'>
     <div class='hero-title'>Clinik</div>
@@ -91,7 +102,15 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Menú en tarjetas visuales con descripción
+# Mensaje destacado sobre misión
+st.markdown("""
+<div class='highlight-box'>
+🔬 Clinik nace con la misión de hacer accesible la estadística avanzada y la psicometría a profesionales de la salud.<br>
+Nuestra plataforma ofrece herramientas de análisis potentes, interpretaciones comprensibles y un diseño pensado para el trabajo real.
+</div>
+""", unsafe_allow_html=True)
+
+# Menú de módulos
 modulos_ordenados = [
     ("📁 Exploración y Estadísticos Básicos", "0_Exploracion", "Revisión inicial de los datos con gráficos e indicadores clave"),
     ("⚖️ Comparación de Grupos (t-test, ANOVA) (Próximamente)", None, "Pruebas para comparar variables entre grupos clínicos"),
@@ -105,12 +124,10 @@ st.markdown("<div class='menu-grid'>", unsafe_allow_html=True)
 for texto, ruta, descripcion in modulos_ordenados:
     if ruta:
         st.markdown(f"""
-        <a href='/{ruta}' style='text-decoration: none;'>
-            <div class='menu-card'>
-                <h3>{texto}</h3>
-                <p>{descripcion}</p>
-            </div>
-        </a>
+        <div class='menu-card'>
+            <h3>{texto}</h3>
+            <p>{descripcion}</p>
+        </div>
         """, unsafe_allow_html=True)
     else:
         st.markdown(f"""
