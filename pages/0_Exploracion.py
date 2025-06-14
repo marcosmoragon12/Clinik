@@ -15,7 +15,7 @@ st.markdown("""
 <style>
     html, body, .main, .block-container {
         background-color: #ffffff !important;
-        color: #1a1a1a !important;
+        color: #212529 !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
     }
     .section-header {
@@ -26,11 +26,12 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     .info-box {
-        background-color: #f8f9fa;
+        background-color: #f1f3f5;
         border-left: 4px solid #1b4332;
         padding: 1rem;
         border-radius: 6px;
         margin-bottom: 1.5rem;
+        color: #212529;
     }
 </style>
 """, unsafe_allow_html=True)
