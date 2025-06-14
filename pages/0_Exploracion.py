@@ -39,6 +39,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+    /* For radio labels */
+    section[data-testid="stRadio"] label {
+        color: #212529 !important;
+        font-weight: 500;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
 st.title("📁 Exploración y Estadísticos Básicos")
 
 st.markdown("""
