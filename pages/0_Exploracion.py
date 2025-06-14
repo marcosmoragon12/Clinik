@@ -1,15 +1,16 @@
 # pages/0_Exploracion.py
 import streamlit as st
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
 import plotly.express as px
 import io
+import random
 
 st.set_page_config(page_title="Exploración de Datos", layout="wide")
 
-# Estilos globales para fondo blanco constante y diseño profesional
+# Estilos CSS
 st.markdown("""
 <style>
     html, body, .main, .block-container {
@@ -31,13 +32,6 @@ st.markdown("""
         border-radius: 6px;
         margin-bottom: 1.5rem;
     }
-    .step-card {
-        background-color: #f1f3f5;
-        padding: 1.2rem;
-        border-radius: 10px;
-        margin: 1rem 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -45,82 +39,79 @@ st.title("📁 Exploración y Estadísticos Básicos")
 
 st.markdown("""
 <div class='info-box'>
-Clinik te permite cargar tu propia base de datos o generar una simulada según tus necesidades. Esta sección realiza una revisión exploratoria completa con gráficas y tablas de utilidad clínica. Ideal para informes, papers o evaluación preliminar de calidad de datos.
+Crea o analiza tu base de datos para obtener una exploración clínica completa. Puedes subir un archivo .csv o definir variables personalizadas para simular un dataset clínico realista.
 </div>
 """, unsafe_allow_html=True)
 
-# Paso 1: Carga o simulación
-st.markdown("<div class='section-header'>Paso 1️⃣: Fuente de datos</div>", unsafe_allow_html=True)
-col1, col2 = st.columns(2)
-modo_datos = col1.radio("¿Cómo deseas comenzar?", ["📤 Subir mis datos", "🧪 Generar simulación"])
-
+modo_datos = st.radio("¿Cómo deseas comenzar?", ["📤 Subir mis datos", "🧪 Simular base personalizada"])
 df = None
+
 if modo_datos == "📤 Subir mis datos":
-    archivo = col2.file_uploader("Carga un archivo .csv con tus datos clínicos", type="csv")
+    archivo = st.file_uploader("Carga un archivo .csv", type="csv")
     if archivo is not None:
         df = pd.read_csv(archivo)
-        st.success("✅ Datos cargados correctamente.")
-else:
-    with col2:
-        n_obs = st.slider("Número de pacientes", 30, 500, 100)
-        n_vars = st.slider("Número de variables clínicas", 3, 15, 8)
-        correlacion = st.slider("Correlación promedio entre variables", 0.0, 0.9, 0.3)
-        np.random.seed(42)
-        base = np.random.multivariate_normal(mean=np.zeros(n_vars),
-                                             cov=(correlacion * np.ones((n_vars, n_vars)) + (1 - correlacion) * np.eye(n_vars)),
-                                             size=n_obs)
-        df = pd.DataFrame(base, columns=[f"Var{i+1}" for i in range(n_vars)])
+        st.success("✅ Datos cargados correctamente")
+
+elif modo_datos == "🧪 Simular base personalizada":
+    st.markdown("<div class='section-header'>📐 Configuración de variables</div>", unsafe_allow_html=True)
+    n_obs = st.slider("Número de pacientes", 30, 500, 100)
+    n_vars = st.number_input("Número de variables a crear", min_value=1, max_value=15, value=3, step=1)
+
+    variable_definida = []
+    for i in range(n_vars):
+        with st.expander(f"🔧 Variable {i+1}"):
+            nombre = st.text_input(f"Nombre de la variable {i+1}", value=f"Var{i+1}", key=f"nombre_{i}")
+            tipo = st.selectbox("Tipo de variable", ["Cuantitativa", "Ordinal", "Nominal"], key=f"tipo_{i}")
+            if tipo == "Cuantitativa":
+                media = st.number_input("Media esperada", value=50.0, key=f"media_{i}")
+                sd = st.number_input("Desviación estándar", value=10.0, key=f"sd_{i}")
+                variable_definida.append((nombre, tipo, media, sd))
+            elif tipo == "Ordinal" or tipo == "Nominal":
+                n_cats = st.number_input("Número de categorías", min_value=2, max_value=10, value=3, key=f"cats_{i}")
+                categorias = [st.text_input(f"Nombre categoría {j+1}", value=f"C{j+1}", key=f"cat_{i}_{j}") for j in range(n_cats)]
+                variable_definida.append((nombre, tipo, categorias))
+
+    if st.button("🚀 Generar base simulada"):
+        simulada = {}
+        for var in variable_definida:
+            nombre = var[0]
+            tipo = var[1]
+            if tipo == "Cuantitativa":
+                media, sd = var[2], var[3]
+                simulada[nombre] = np.random.normal(loc=media, scale=sd, size=n_obs)
+            else:
+                categorias = var[2]
+                simulada[nombre] = np.random.choice(categorias, size=n_obs)
+        df = pd.DataFrame(simulada)
         st.success("✅ Datos simulados generados.")
 
 if df is not None:
-    st.markdown("<div class='section-header'>Paso 2️⃣: Exploración general</div>", unsafe_allow_html=True)
-
-    with st.expander("🔍 Vista Previa del Dataset"):
-        st.dataframe(df.head())
+    st.markdown("<div class='section-header'>🔍 Vista previa y resumen</div>", unsafe_allow_html=True)
+    st.dataframe(df.head())
 
     with st.expander("📊 Estadísticos descriptivos"):
-        st.write(df.describe().T.style.format("{:.2f}"))
+        st.write(df.describe(include='all').T)
 
-    with st.expander("📉 Distribuciones por variable"):
-        variables = st.multiselect("Selecciona variables para visualizar distribuciones:", df.columns, default=df.columns[:2])
-        for var in variables:
-            fig = px.histogram(df, x=var, marginal="box", nbins=30, title=f"Distribución de {var}", template="simple_white")
-            st.plotly_chart(fig, use_container_width=True)
-
-    with st.expander("📈 Matriz de correlaciones"):
-        fig2, ax2 = plt.subplots(figsize=(10, 6))
-        sns.heatmap(df.corr(), annot=True, fmt=".2f", cmap="Greens", ax=ax2)
-        st.pyplot(fig2)
-
-    with st.expander("🧩 Valores perdidos"):
-        missing_count = df.isna().sum()
-        if missing_count.sum() > 0:
-            st.warning("⚠️ Hay valores perdidos en el dataset.")
-            st.dataframe(missing_count[missing_count > 0])
+    with st.expander("📈 Distribuciones"):
+        var_hist = st.selectbox("Selecciona una variable para ver su distribución:", df.columns)
+        if df[var_hist].dtype == 'object':
+            fig = px.histogram(df, x=var_hist, color=var_hist, title=f"Distribución de {var_hist}", template="simple_white")
         else:
-            st.success("✅ No hay valores perdidos.")
+            fig = px.histogram(df, x=var_hist, marginal="box", title=f"Distribución de {var_hist}", template="simple_white")
+        st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("<div class='section-header'>Paso 3️⃣: Exportar datos preparados</div>", unsafe_allow_html=True)
-    formato = st.selectbox("Formato de descarga", ["CSV", "Excel", "JSON"])
-    nombre_archivo = st.text_input("Nombre del archivo a exportar", value="datos_explorados")
+    with st.expander("📉 Matriz de correlación (solo numéricas)"):
+        num_df = df.select_dtypes(include=np.number)
+        if not num_df.empty:
+            fig_corr, ax = plt.subplots(figsize=(10, 6))
+            sns.heatmap(num_df.corr(), annot=True, cmap="Greens", ax=ax)
+            st.pyplot(fig_corr)
+        else:
+            st.info("No hay variables numéricas suficientes para calcular correlaciones.")
 
-    if formato == "CSV":
-        datos = df.to_csv(index=False).encode("utf-8")
-        mime = "text/csv"
-        file_name = f"{nombre_archivo}.csv"
-    elif formato == "Excel":
-        buffer = io.BytesIO()
-        with pd.ExcelWriter(buffer, engine="xlsxwriter") as writer:
-            df.to_excel(writer, index=False)
-        datos = buffer.getvalue()
-        mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        file_name = f"{nombre_archivo}.xlsx"
-    else:
-        datos = df.to_json(orient="records").encode("utf-8")
-        mime = "application/json"
-        file_name = f"{nombre_archivo}.json"
-
-    st.download_button("💾 Descargar", data=datos, file_name=file_name, mime=mime)
-
+    st.markdown("<div class='section-header'>📁 Exportar dataset</div>", unsafe_allow_html=True)
+    nombre_archivo = st.text_input("Nombre del archivo", value="datos_explorados")
+    csv = df.to_csv(index=False).encode('utf-8')
+    st.download_button("💾 Descargar CSV", data=csv, file_name=f"{nombre_archivo}.csv", mime="text/csv")
 else:
-    st.info("Carga o genera un dataset para comenzar la exploración.")
+    st.info("Carga o genera un dataset para iniciar la exploración.")
