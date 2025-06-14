@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS profesionales con botones interactivos y layout refinado
+# Estilos CSS profesionales con layout refinado
 st.markdown("""
 <style>
     html, body, .main, .block-container {
@@ -79,7 +79,12 @@ st.markdown("""
     .module-desc {
         font-size: 0.95rem;
         color: #495057;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .module-info-note {
+        font-size: 0.8rem;
+        color: #868e96;
+        font-style: italic;
     }
     .footer-note {
         text-align: center;
@@ -106,7 +111,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Tarjetas de módulos con botones funcionales
+# Tarjetas de módulos SOLO informativas
 modulos_ordenados = [
     ("📁 Exploración y Estadísticos Básicos", "0_Exploracion", "Revisión inicial de los datos con gráficos e indicadores clave"),
     ("⚖️ Comparación de Grupos (t-test, ANOVA)", None, "Próximamente: Pruebas para comparar variables entre grupos clínicos"),
@@ -122,22 +127,16 @@ for texto, ruta, descripcion in modulos_ordenados:
     <div class='module-card'>
         <div class='module-title'>{texto}</div>
         <div class='module-desc'>{descripcion}</div>
+        <div class='module-info-note'>Disponible desde el menú lateral izquierdo</div>
+    </div>
     """, unsafe_allow_html=True)
-    if ruta:
-        if st.button(f"Acceder ➡️", key=ruta):
-            st.markdown(f"<meta http-equiv='refresh' content='0; url=/{ruta}'>", unsafe_allow_html=True)
-    else:
-        st.markdown("""
-        <span class='module-button' style='background-color:#adb5bd; cursor: not-allowed;'>Próximamente</span>
-        """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Pie de página informativo
 st.markdown("""
 <div class='footer-note'>
-📌 Usa el menú lateral izquierdo para acceder a los módulos.<br>
+📌 Usa el menú lateral izquierdo para acceder a los módulos activos.<br>
 🔒 Clinik evoluciona constantemente para convertirse en tu aliada profesional en investigación clínica y aplicada.
 </div>
 """, unsafe_allow_html=True)
