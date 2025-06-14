@@ -1,6 +1,5 @@
 # app.py
 import streamlit as st
-import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Clinik",
@@ -82,21 +81,6 @@ st.markdown("""
         color: #495057;
         margin-bottom: 1rem;
     }
-    .module-button {
-        background-color: #1b4332;
-        color: #fff;
-        border: none;
-        padding: 0.5rem 1.2rem;
-        border-radius: 8px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: 0.3s;
-        text-decoration: none;
-        display: inline-block;
-    }
-    .module-button:hover {
-        background-color: #2d6a4f;
-    }
     .footer-note {
         text-align: center;
         color: #868e96;
@@ -122,7 +106,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Tarjetas de módulos con botones
+# Tarjetas de módulos con botones funcionales
 modulos_ordenados = [
     ("📁 Exploración y Estadísticos Básicos", "0_Exploracion", "Revisión inicial de los datos con gráficos e indicadores clave"),
     ("⚖️ Comparación de Grupos (t-test, ANOVA)", None, "Próximamente: Pruebas para comparar variables entre grupos clínicos"),
@@ -134,14 +118,19 @@ modulos_ordenados = [
 
 st.markdown("<div class='modules-wrapper'>", unsafe_allow_html=True)
 for texto, ruta, descripcion in modulos_ordenados:
-    button = f"<a href='/{ruta}' class='module-button'>Acceder</a>" if ruta else f"<span class='module-button' style='background-color:#adb5bd; cursor: not-allowed;'>Próximamente</span>"
     st.markdown(f"""
     <div class='module-card'>
         <div class='module-title'>{texto}</div>
         <div class='module-desc'>{descripcion}</div>
-        {button}
-    </div>
     """, unsafe_allow_html=True)
+    if ruta:
+        if st.button(f"Acceder ➡️", key=ruta):
+            st.markdown(f"<meta http-equiv='refresh' content='0; url=/{ruta}'>", unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <span class='module-button' style='background-color:#adb5bd; cursor: not-allowed;'>Próximamente</span>
+        """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
