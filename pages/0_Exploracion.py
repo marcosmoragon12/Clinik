@@ -18,6 +18,9 @@ st.markdown("""
         color: #212529 !important;
         font-family: 'Inter', 'Segoe UI', sans-serif;
     }
+    label, .stRadio > div, .stSlider > div, .stNumberInput > div, .stSelectbox > div, .stTextInput > div {
+        color: #212529 !important;
+    }
     .section-header {
         font-size: 1.5rem;
         font-weight: bold;
@@ -26,12 +29,12 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     .info-box {
-        background-color: #f1f3f5;
+        background-color: #f8f9fa;
         border-left: 4px solid #1b4332;
         padding: 1rem;
         border-radius: 6px;
         margin-bottom: 1.5rem;
-        color: #212529;
+        color: #343a40;
     }
 </style>
 """, unsafe_allow_html=True)
